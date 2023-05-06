@@ -24,15 +24,38 @@ public class Driver {
       sonraki kullanimlarda calismasin diye bir yontem gelistirmeliyiz
      */
 
+
     public static WebDriver driver;
 
     public static WebDriver getDriver(){
 
-        ChromeOptions options=new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
+        String istenenBrowser = ConfigReader.getProperty("browser");
+
         if (driver==null) {
-            driver = new ChromeDriver(options);
+
+            switch (istenenBrowser){
+
+                case "firefox" :
+                    WebDriverManager.firefoxdriver().setup();
+                    driver= new FirefoxDriver();
+                    break;
+                case "edge":
+                    WebDriverManager.edgedriver().setup();
+                    driver= new EdgeDriver();
+                    break;
+                case "safari" :
+                    WebDriverManager.safaridriver().setup();
+                    driver= new SafariDriver();
+                    break;
+                default:
+                    ChromeOptions options=new ChromeOptions();
+                    options.addArguments("--remote-allow-origins=*");
+                    driver= new ChromeDriver(options);
+
+            }
+
         }
+
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(15));
 
